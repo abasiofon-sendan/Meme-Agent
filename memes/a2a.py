@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from .views import fetch_meme
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def handle_a2a(request):
     try:
         meme = fetch_meme()
