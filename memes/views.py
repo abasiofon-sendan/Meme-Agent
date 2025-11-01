@@ -1,13 +1,13 @@
 import requests
 from django.http import JsonResponse
 
-def fetch_meme():
-    """Helper function to get a meme from external API"""
-    response = requests.get("https://meme-api.com/gimme/ProgrammerHumor")
+def fetch_joke(request):
+    """Fetch a random programming joke"""
+    response = requests.get("https://v2.jokeapi.dev/joke/Programming?type=single")
     response.raise_for_status()
     data = response.json()
-    return {
-        "title": data.get("title"),
-        "image_url": data.get("url"),
-        "postLink": data.get("postLink"),
-    }
+    
+    return JsonResponse({
+        "joke": data.get("joke"),
+        "category": data.get("category"),
+    })

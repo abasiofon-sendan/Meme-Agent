@@ -1,20 +1,26 @@
 import uuid
 from django.http import JsonResponse
-from .views import fetch_meme
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+import requests
+
 
 @csrf_exempt
 @require_http_methods(["POST", "GET"])
 def handle_a2a(request):
     try:
-        meme = fetch_meme()
+        # Fetch a programming joke from JokeAPI
+        joke_response = requests.get("https://v2.jokeapi.dev/joke/Programming?type=single")
+        joke_response.raise_for_status()
+        data = joke_response.json()
+        joke_text = data.get("joke", "Here's a random programming joke for you!")
 
-        # Generate unique IDs
+        # Generate unique IDs for message/task
         task_id = str(uuid.uuid4())
         context_id = str(uuid.uuid4())
 
+        # Build the A2A-compatible JSON response
         response_data = {
             "jsonrpc": "2.0",
             "id": 1,
@@ -30,16 +36,7 @@ def handle_a2a(request):
                         "parts": [
                             {
                                 "kind": "text",
-                                "text": f"Here's a programming meme for you 🤖\n**{meme['title']}**"
-                            },
-                            {
-                                "kind": "file",  # ✅ changed from "image"
-                                "file_url": meme["image_url"],
-                                "text": None
-                            },
-                            {
-                                "kind": "text",
-                                "text": f"[View on Reddit]({meme['postLink']})"
+                                "text": f"😂 Here's a programming joke for you:\n\n{joke_text}"
                             }
                         ],
                         "messageId": str(uuid.uuid4()),
