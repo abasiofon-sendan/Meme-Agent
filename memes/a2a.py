@@ -5,23 +5,20 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 import requests
 
-
 @csrf_exempt
 @require_http_methods(["POST", "GET"])
 def handle_a2a(request):
     try:
-        # Fetch a programming joke from JokeAPI
-        joke_response = requests.get("https://v2.jokeapi.dev/joke/Programming?type=single")
-        joke_response.raise_for_status()
-        data = joke_response.json()
-        joke_text = data.get("joke", "Here's a random programming joke for you!")
+        # Fetch joke
+        response = requests.get("https://v2.jokeapi.dev/joke/Programming?type=single")
+        response.raise_for_status()
+        data = response.json()
+        joke_text = data.get("joke", "Here’s a random programming joke!")
 
-        # Generate unique IDs for message/task
         task_id = str(uuid.uuid4())
         context_id = str(uuid.uuid4())
 
-        # Build the A2A-compatible JSON response
-        response_data = {
+        return JsonResponse({
             "jsonrpc": "2.0",
             "id": 1,
             "result": {
@@ -45,9 +42,7 @@ def handle_a2a(request):
                 },
                 "artifacts": []
             }
-        }
-
-        return JsonResponse(response_data, safe=False)
+        }, safe=False)
 
     except Exception as e:
         return JsonResponse({
