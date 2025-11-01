@@ -11,7 +11,7 @@ def handle_a2a(request):
     try:
         meme = fetch_meme()
 
-        # generate unique IDs for message/task
+        # Generate unique IDs
         task_id = str(uuid.uuid4())
         context_id = str(uuid.uuid4())
 
@@ -33,7 +33,7 @@ def handle_a2a(request):
                                 "text": f"Here's a programming meme for you 🤖\n**{meme['title']}**"
                             },
                             {
-                                "kind": "image",
+                                "kind": "file",  # ✅ changed from "image"
                                 "file_url": meme["image_url"],
                                 "text": None
                             },
