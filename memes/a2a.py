@@ -33,7 +33,7 @@ def handle_a2a(request):
                                 "text": f"Here's a programming meme for you 🤖\n**{meme['title']}**"
                             },
                             {
-                                "kind": "image",  # ✅ changed from "image"
+                                "kind": "file",
                                 "file_url": meme["image_url"],
                                 "text": None
                             },
@@ -46,7 +46,18 @@ def handle_a2a(request):
                         "taskId": task_id
                     }
                 },
-                "artifacts": []
+                "artifacts": [
+                    {
+                        "artifactId": str(uuid.uuid4()),
+                        "name": "meme_details",
+                        "parts": [
+                            {
+                                "kind": "text",
+                                "text": f" **Meme Title:** {meme['title']}\n\n📎 **Source:** [Reddit Link]({meme['postLink']})\n\n🕓 **Fetched at:** {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}\n\nKeep smiling 😄",
+                            }
+                        ]
+                    }
+                ]
             }
         }
 
