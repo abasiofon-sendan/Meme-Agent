@@ -1,24 +1,21 @@
 import uuid
 from django.http import JsonResponse
+from .views import fetch_meme
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-import requests
 
 @csrf_exempt
 @require_http_methods(["POST", "GET"])
 def handle_a2a(request):
     try:
-        # Fetch joke
-        response = requests.get("https://v2.jokeapi.dev/joke/Programming?type=single")
-        response.raise_for_status()
-        data = response.json()
-        joke_text = data.get("joke", "Here’s a random programming joke!")
+        meme = fetch_meme()
 
+        # Generate unique IDs
         task_id = str(uuid.uuid4())
         context_id = str(uuid.uuid4())
 
-        return JsonResponse({
+        response_data = {
             "jsonrpc": "2.0",
             "id": 1,
             "result": {
@@ -33,7 +30,16 @@ def handle_a2a(request):
                         "parts": [
                             {
                                 "kind": "text",
-                                "text": f"😂 Here's a programming joke for you:\n\n{joke_text}"
+                                "text": f"Here's a programming meme for you 🤖\n**{meme['title']}**"
+                            },
+                            {
+                                "kind": "file",  # ✅ changed from "image"
+                                "file_url": meme["image_url"],
+                                "text": None
+                            },
+                            {
+                                "kind": "text",
+                                "text": f"[View on Reddit]({meme['postLink']})"
                             }
                         ],
                         "messageId": str(uuid.uuid4()),
@@ -42,7 +48,9 @@ def handle_a2a(request):
                 },
                 "artifacts": []
             }
-        }, safe=False)
+        }
+
+        return JsonResponse(response_data, safe=False)
 
     except Exception as e:
         return JsonResponse({
