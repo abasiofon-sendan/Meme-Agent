@@ -52,16 +52,16 @@ def handle_a2a(request):
                     }
                 },
                 "artifacts": [
-                    {
-                        "artifactId": str(uuid.uuid4()),
-                        "name": "Meme Data",
-                        "parts": [
-                            {
-                                "kind": "text",
-                                "text": message_text
-                            }
-                        ]
-                    }
+                    # {
+                    #     "artifactId": str(uuid.uuid4()),
+                    #     "name": "Meme Data",
+                    #     "parts": [
+                    #         {
+                    #             "kind": "text",
+                    #             "text": message_text
+                    #         }
+                    #     ]
+                    # }
                 ],
                 "kind": "task"
             }
