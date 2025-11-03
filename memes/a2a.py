@@ -33,7 +33,7 @@ def handle_a2a(request):
                                 "text": f"Here's a programming meme for you 🤖\n**{meme['title']}**"
                             },
                             {
-                                "kind": "file",  # ✅ changed from "image"
+                                "kind": "image",  # ✅ changed from "image"
                                 "file_url": meme["image_url"],
                                 "text": None
                             },
