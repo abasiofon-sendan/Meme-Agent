@@ -59,6 +59,11 @@ def handle_a2a(request):
                             {
                                 "kind": "text",
                                 "text": message_text
+                            },
+                            {
+                                "kind": "file",  # ✅ add image in artifact
+                                "file_url": meme["image_url"],
+                                "text": None
                             }
                         ]
                     }
